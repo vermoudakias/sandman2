@@ -91,6 +91,9 @@ class Service(MethodView):
         if 'meta' in request.path:
             return self._meta()
 
+        if 'count' in request.path:
+            return self._count()
+
         if resource_id is None:
             error_message = is_valid_method(self.__model__)
             if error_message:
@@ -186,6 +189,11 @@ class Service(MethodView):
         """Return a description of this resource as reported by the
         database."""
         return flask.jsonify(self.__model__.description())
+
+    def _count(self):
+        """Return the number of entries of this resource as reported by the
+        database."""
+        return flask.jsonify({'resource_count':self.__model__.query.count()})
 
     def _resource(self, resource_id):
         """Return the ``sandman2.model.Model`` instance with the given
