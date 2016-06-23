@@ -213,6 +213,18 @@ class Service(MethodView):
             for key, value in args.items():
                 if value.startswith('%'):
                     filters.append(getattr(self.__model__, key).like(str(value), escape='/'))
+                elif key == 'filter':
+                    v_list = request.args.getlist(key)
+                    for entry in v_list:
+                        col, comp, threshold = entry.split(' ', 3)
+                        if comp == 'gt':
+                            filters.append(getattr(self.__model__, col) > threshold)
+                        elif comp == 'ge':
+                            filters.append(getattr(self.__model__, col) >= threshold)
+                        elif comp == 'lt':
+                            filters.append(getattr(self.__model__, col) < threshold)
+                        elif comp == 'le':
+                            filters.append(getattr(self.__model__, col) <= threshold)
                 elif key == 'sort':
                     order.append(getattr(self.__model__, value))
                 elif key == 'limit':
