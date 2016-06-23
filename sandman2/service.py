@@ -201,7 +201,8 @@ class Service(MethodView):
 
         :rtype: :class:`sandman2.model.Model`
         """
-        resource = self.__model__.query.get(resource_id)
+        print('resource_id = %s' % resource_id)
+        resource = self.__model__.query.get(resource_id.split(','))
         if not resource:
             raise NotFoundException()
         return resource
