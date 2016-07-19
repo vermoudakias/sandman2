@@ -225,7 +225,12 @@ class Service(MethodView):
                 elif key == 'filter':
                     v_list = request.args.getlist(key)
                     for entry in v_list:
-                        col, comp, threshold = entry.split(' ', 3)
+                        tmp_list = str(entry).split('^', 2)
+                        try:
+                            (col, comp, threshold) = (tmp_entry.strip() for tmp_entry in tmp_list)
+                        except:
+                            print('ERROR: invalid filter (%s)' % str(entry))
+                            raise
                         if comp == 'gt':
                             filters.append(getattr(self.__model__, col) > threshold)
                         elif comp == 'ge':
